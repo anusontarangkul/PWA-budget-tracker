@@ -2,7 +2,6 @@
 
 let db;
 const request = indexedDB.open('budget', 1);
-console.log(request)
 
 request.onupgradeneeded = function (event) {
     const db = event.target.result;
@@ -34,24 +33,23 @@ function saveRecord(record) {
 }
 
 function uploadTransaction() {
-    console.log('o')
     // open a transaction on your pending db
     const transaction = db.transaction(['new_budget'], 'readwrite');
 
     // access your pending object store
     const budgetObjectStore = transaction.objectStore('new_budget');
-    console.log(budgetObjectStore)
+
 
     // get all records from store and set to a variable
     const getAll = budgetObjectStore.getAll();
-    console.log(getAll)
+
 
     getAll.onsuccess = function () {
         // if there was data in indexedDb's store, let's send it to the api server
-        console.log(getAll.result)
+
         if (getAll.result.length > 0) {
-            console.log('h')
-            fetch('/api/transaction', {
+
+            fetch('/api/transaction/bulk', {
                 method: 'POST',
                 body: JSON.stringify(getAll.result),
                 headers: {
